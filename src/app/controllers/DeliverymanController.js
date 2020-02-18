@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliverymanController {
   async store(req, res) {
@@ -16,7 +17,16 @@ class DeliverymanController {
 
     const { email } = req.body;
 
-    const deliverymanExists = await Deliveryman.findOne({ where: { email } });
+    const deliverymanExists = await Deliveryman.findOne({
+      where: { email },
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url']
+        }
+      ]
+    });
 
     if (deliverymanExists)
       return res.status(400).json({ error: 'User already exists' });
@@ -52,17 +62,13 @@ class DeliverymanController {
     if (email && email !== deliveryman.email) {
       const deliverymanExists = await Deliveryman.findOne({ where: { email } });
 
-      if (deliverymanExists)
+      if (deliverymanExists && deliverymanExists.email !== deliveryman.email)
         return res.status(400).json({ error: 'User already exists' });
     }
 
-    const { name } = await deliveryman.update(req.body);
+    await deliveryman.update(req.body);
 
-    return res.json({
-      id,
-      name,
-      email
-    });
+    return res.json(deliveryman);
   }
 
   async delete(req, res) {
