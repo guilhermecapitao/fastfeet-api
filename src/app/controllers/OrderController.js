@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 
 import Order from '../models/Order';
+import Recipient from '../models/Recipient';
+import Deliveryman from '../models/Deliveryman';
 
 class OrderController {
   async index(req, res) {
@@ -20,6 +22,16 @@ class OrderController {
       return res.status(400).json({ error: 'Validation fails' });
 
     const { recipient_id, deliveryman_id, product } = req.body;
+
+    const DeliverymanExists = await Deliveryman.findByPk(deliveryman_id);
+
+    if (!DeliverymanExists)
+      return res.json({ error: "Deliveryman doesn't exists" });
+
+    const RecipientExists = await Recipient.findByPk(recipient_id);
+
+    if (!RecipientExists)
+      return res.json({ error: "Recipient doesn't exists" });
 
     const order = await Order.create({
       recipient_id,

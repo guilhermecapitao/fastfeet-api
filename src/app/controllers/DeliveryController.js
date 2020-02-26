@@ -44,6 +44,14 @@ class Delivery {
     });
 
     /**
+     * Checks whether the delivery is linked to the deliveryman
+     */
+    if (delivery.deliveryman_id !== Number(deliverymanId))
+      return res.json({
+        error: 'You cannot start a delivery that does not belong to you'
+      });
+
+    /**
      * Check if this deliveryman already finished 5 deliveries today
      */
     if (deliveriesToday >= 5)
