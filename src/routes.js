@@ -7,6 +7,7 @@ import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import OrderController from './app/controllers/OrderController';
+import DeliveryController from './app/controllers/DeliveryController';
 
 import authMiddleware from './app/middlewares/auth';
 import adminUser from './app/middlewares/adminUser';
@@ -21,14 +22,30 @@ routes.post('/recipients', RecipientController.store);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
+/**
+ * DeliverymanController
+ */
 routes.post('/deliverymans', adminUser, DeliverymanController.store);
 routes.get('/deliverymans', adminUser, DeliverymanController.index);
 routes.put('/deliverymans/:id', adminUser, DeliverymanController.update);
 routes.delete('/deliverymans/:id', adminUser, DeliverymanController.delete);
 
-routes.post('/order', OrderController.store);
-routes.get('/order', OrderController.index);
-routes.put('/order/:id', OrderController.update);
-routes.delete('/order/:id', OrderController.delete);
+/**
+ * OrderController
+ */
+routes.post('/order', adminUser, OrderController.store);
+routes.get('/order', adminUser, OrderController.index);
+routes.put('/order/:id', adminUser, OrderController.update);
+routes.delete('/order/:id', adminUser, OrderController.delete);
+
+/**
+ * DeliveryController
+ */
+routes.get('/deliveryman/:id/deliver', DeliveryController.index);
+routes.delete('/problem/:id/cancel-delivery', DeliveryController.delete);
+routes.put(
+  '/deliveryman/:deliverymanId/delivery/:id/start',
+  DeliveryController.update
+);
 
 export default routes;
