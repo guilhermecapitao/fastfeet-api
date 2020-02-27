@@ -9,6 +9,7 @@ import DeliverymanController from './app/controllers/DeliverymanController';
 import OrderController from './app/controllers/OrderController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliveriedController from './app/controllers/DeliveriedController';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 import adminUser from './app/middlewares/adminUser';
@@ -43,7 +44,7 @@ routes.delete('/order/:id', adminUser, OrderController.delete);
  * DeliveryController
  */
 routes.get('/deliveryman/:id/deliver', DeliveryController.index);
-routes.delete('/problem/:id/cancel-delivery', DeliveryController.delete);
+routes.delete('/delivery/:id/cancel-delivery', DeliveryController.delete);
 routes.put(
   '/deliveryman/:deliverymanId/delivery/:id/start',
   DeliveryController.update
@@ -57,5 +58,13 @@ routes.put(
   '/deliveryman/:deliverymanId/delivery/:id/end',
   DeliveriedController.update
 );
+
+/**
+ * DeliveryProblemController
+ */
+routes.post('/delivery/:id/problems', DeliveryProblemController.store);
+routes.get('/delivery/problems', DeliveryProblemController.index);
+routes.get('/delivery/problems/:id', DeliveryProblemController.index);
+routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
 
 export default routes;
