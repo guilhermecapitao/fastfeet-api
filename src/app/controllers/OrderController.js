@@ -4,6 +4,8 @@ import Order from '../models/Order';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 
+import Mail from '../../lib/Mail';
+
 class OrderController {
   async index(req, res) {
     const orders = await Order.findAll();
@@ -23,10 +25,9 @@ class OrderController {
 
     const { recipient_id, deliveryman_id, product } = req.body;
 
-    const DeliverymanExists = await Deliveryman.findByPk(deliveryman_id);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-    if (!DeliverymanExists)
-      return res.json({ error: "Deliveryman doesn't exists" });
+    if (!deliveryman) return res.json({ error: "Deliveryman doesn't exists" });
 
     const RecipientExists = await Recipient.findByPk(recipient_id);
 
@@ -37,6 +38,12 @@ class OrderController {
       recipient_id,
       deliveryman_id,
       product
+    });
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: 'Nova encomenda cadastrada',
+      text: 'Você tem uma encomenda pronta para retirada.'
     });
 
     return res.json(order);
