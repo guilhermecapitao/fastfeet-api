@@ -6,6 +6,7 @@ class File extends Model {
       {
         name: Sequelize.STRING,
         path: Sequelize.STRING,
+        order_id: Sequelize.STRING,
         url: {
           type: Sequelize.VIRTUAL,
           get() {
@@ -18,6 +19,13 @@ class File extends Model {
       }
     );
     return this;
+  }
+
+  static associate(models) {
+    this.belongsTo(models.Order, {
+      foreignKey: 'order_id',
+      as: 'order'
+    });
   }
 }
 

@@ -1,5 +1,6 @@
 import Order from '../models/Order';
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliveriedController {
   async index(req, res) {
@@ -31,6 +32,7 @@ class DeliveriedController {
    */
   async update(req, res) {
     const { id, deliverymanId } = req.params;
+    const { originalname: name, filename: path } = req.file;
 
     const delivery = await Order.findByPk(id);
 
@@ -61,8 +63,15 @@ class DeliveriedController {
 
     // Upload de arquivo aqui posteriormente
 
+    const signature = await File.create({
+      name,
+      path,
+      order_id: id
+    });
+
     await delivery.update({
-      end_date: new Date()
+      end_date: new Date(),
+      signature_id: signature.id
     });
 
     return res.json(delivery);

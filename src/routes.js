@@ -56,6 +56,7 @@ routes.put(
 routes.get('/deliveryman/:id/deliveries', DeliveriedController.index);
 routes.put(
   '/deliveryman/:deliverymanId/delivery/:id/end',
+  upload.single('file'),
   DeliveriedController.update
 );
 
