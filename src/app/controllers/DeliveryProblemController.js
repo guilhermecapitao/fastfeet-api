@@ -4,7 +4,9 @@ import Problem from '../models/Problem';
 import Order from '../models/Order';
 import Deliveryman from '../models/Deliveryman';
 
-import Mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+
+import CancellationMail from '../jobs/CancellationMail';
 
 class DeliveryProblemController {
   async index(req, res) {
@@ -37,7 +39,6 @@ class DeliveryProblemController {
       description,
       order_id: id
     });
-
     return res.json(problem);
   }
 
@@ -54,18 +55,15 @@ class DeliveryProblemController {
       ]
     });
 
+    if (!problem) return res.json({ error: "Problem doesn't exists" });
+
     const deliveryman = await Deliveryman.findByPk(
       problem.order.deliveryman_id
     );
 
-    await Mail.sendMail({
-      to: `${deliveryman.name} <${deliveryman.email}>`,
-      subject: 'Entrega cancelada',
-      template: 'cancellation',
-      context: {
-        deliveryman: deliveryman.name,
-        description: problem.description
-      }
+    await Queue.add(CancellationMail.key, {
+      deliveryman,
+      problem
     });
 
     await Order.destroy({
