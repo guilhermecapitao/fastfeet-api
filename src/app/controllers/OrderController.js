@@ -29,10 +29,9 @@ class OrderController {
 
     if (!deliveryman) return res.json({ error: "Deliveryman doesn't exists" });
 
-    const RecipientExists = await Recipient.findByPk(recipient_id);
+    const recipient = await Recipient.findByPk(recipient_id);
 
-    if (!RecipientExists)
-      return res.json({ error: "Recipient doesn't exists" });
+    if (!recipient) return res.json({ error: "Recipient doesn't exists" });
 
     const order = await Order.create({
       recipient_id,
@@ -40,10 +39,18 @@ class OrderController {
       product
     });
 
+    const address = `${recipient.street}, ${recipient.city}, ${recipient.state}`;
+
     await Mail.sendMail({
       to: `${deliveryman.name} <${deliveryman.email}>`,
       subject: 'Nova encomenda cadastrada',
-      text: 'Você tem uma encomenda pronta para retirada.'
+      template: 'newdelivery',
+      context: {
+        deliveryman: deliveryman.name,
+        address,
+        recipient: recipient.name,
+        product
+      }
     });
 
     return res.json(order);

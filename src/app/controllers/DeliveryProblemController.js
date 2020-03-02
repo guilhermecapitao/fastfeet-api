@@ -2,6 +2,9 @@ import * as Yup from 'yup';
 
 import Problem from '../models/Problem';
 import Order from '../models/Order';
+import Deliveryman from '../models/Deliveryman';
+
+import Mail from '../../lib/Mail';
 
 class DeliveryProblemController {
   async index(req, res) {
@@ -41,7 +44,29 @@ class DeliveryProblemController {
   async delete(req, res) {
     const { id } = req.params;
 
-    const problem = await Problem.findByPk(id);
+    const problem = await Problem.findByPk(id, {
+      include: [
+        {
+          model: Order,
+          as: 'order',
+          attributes: ['deliveryman_id']
+        }
+      ]
+    });
+
+    const deliveryman = await Deliveryman.findByPk(
+      problem.order.deliveryman_id
+    );
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: 'Entrega cancelada',
+      template: 'cancellation',
+      context: {
+        deliveryman: deliveryman.name,
+        description: problem.description
+      }
+    });
 
     await Order.destroy({
       where: {
