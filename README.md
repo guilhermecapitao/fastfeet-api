@@ -13,7 +13,7 @@ Fastfeet foi uma aplicação desenvolvida no bootcamp GoStack da Rocketseat. O o
 <p><a href="https://github.com/Rocketseat/bootcamp-gostack-desafio-02/blob/4e6c5db70ac176f78545d5c8a71b5930f72dc13a/README.md">1º do desafio</a></p>
 <p><a href="https://github.com/Rocketseat/bootcamp-gostack-desafio-03/blob/d0c8f32222938cec6719637a1d21616531da9644/README.md">2º do desafio</a></p>
 
-### Funcionalidades disponíveis:
+### Funcionalidades disponíveis
 * Admin consegue se autenticar via Token JWT
 * Cadastrar e Editar destinatários.
 * Listar/cadastrar/editar/deletar entregadores e entregas.
@@ -49,7 +49,12 @@ yarn dev
 <hr />
 
 ### Rotas (import)
-[Insomnia](https://github.com/guilhermecapitao/fastfeet-api/tree/master/src/others)
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Fastfeet&uri=https%3A%2F%2Fgithub.com%2Fguilhermecapitao%2Ffastfeet-api%2Ftree%2Fmaster%2Fsrc%2Fothers)
 
 ### Tarefas
 [Kanban](https://github.com/guilhermecapitao/fastfeet-api/projects)
+
+## 📝 License
+
+Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/guilhermecapitao/fastfeet-api/blob/master/LICENSE) para mais detalhes.
+
